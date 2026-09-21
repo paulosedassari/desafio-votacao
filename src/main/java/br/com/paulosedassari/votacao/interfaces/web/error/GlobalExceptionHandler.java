@@ -2,7 +2,10 @@ package br.com.paulosedassari.votacao.interfaces.web.error;
 
 import br.com.paulosedassari.votacao.domain.pauta.exception.PautaNaoEncontradaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.DuracaoSessaoInvalidaException;
+import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoEncerradaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoJaExistenteException;
+import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoNaoEncontradaException;
+import br.com.paulosedassari.votacao.domain.voto.exception.VotoDuplicadoException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,45 @@ public class GlobalExceptionHandler {
         return resposta(
                 HttpStatus.NOT_FOUND,
                 "PAUTA_NAO_ENCONTRADA",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(SessaoNaoEncontradaException.class)
+    ResponseEntity<ErroResponse> tratarSessaoNaoEncontrada(
+            SessaoNaoEncontradaException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.NOT_FOUND,
+                "SESSAO_NAO_ENCONTRADA",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(SessaoEncerradaException.class)
+    ResponseEntity<ErroResponse> tratarSessaoEncerrada(
+            SessaoEncerradaException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.CONFLICT,
+                "SESSAO_ENCERRADA",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(VotoDuplicadoException.class)
+    ResponseEntity<ErroResponse> tratarVotoDuplicado(
+            VotoDuplicadoException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.CONFLICT,
+                "VOTO_JA_REGISTRADO",
                 exception.getMessage(),
                 request
         );
