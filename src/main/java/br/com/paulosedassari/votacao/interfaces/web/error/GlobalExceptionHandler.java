@@ -1,5 +1,8 @@
 package br.com.paulosedassari.votacao.interfaces.web.error;
 
+import br.com.paulosedassari.votacao.domain.pauta.exception.PautaNaoEncontradaException;
+import br.com.paulosedassari.votacao.domain.sessao.exception.DuracaoSessaoInvalidaException;
+import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoJaExistenteException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,45 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(PautaNaoEncontradaException.class)
+    ResponseEntity<ErroResponse> tratarPautaNaoEncontrada(
+            PautaNaoEncontradaException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.NOT_FOUND,
+                "PAUTA_NAO_ENCONTRADA",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(SessaoJaExistenteException.class)
+    ResponseEntity<ErroResponse> tratarSessaoJaExistente(
+            SessaoJaExistenteException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.CONFLICT,
+                "SESSAO_JA_EXISTENTE",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(DuracaoSessaoInvalidaException.class)
+    ResponseEntity<ErroResponse> tratarDuracaoInvalida(
+            DuracaoSessaoInvalidaException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.BAD_REQUEST,
+                "DURACAO_INVALIDA",
+                exception.getMessage(),
+                request
+        );
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ErroResponse> tratarValidacao(
