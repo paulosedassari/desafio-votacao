@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -18,6 +20,17 @@ class SessaoVotacaoPersistenceAdapter implements SessaoVotacaoPersistencePort {
     @Override
     public boolean existePorPautaId(Long pautaId) {
         return repository.existsByPautaId(pautaId);
+    }
+
+    @Override
+    public Optional<SessaoVotacao> buscarPorPautaId(Long pautaId) {
+        return repository.findByPautaId(pautaId)
+                .map(entidade -> new SessaoVotacao(
+                        entidade.getId(),
+                        entidade.getPautaId(),
+                        entidade.getAbertaEm(),
+                        entidade.getEncerraEm()
+                ));
     }
 
     @Override
