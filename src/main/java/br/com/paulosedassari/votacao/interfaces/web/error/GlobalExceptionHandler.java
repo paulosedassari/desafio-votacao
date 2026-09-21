@@ -3,6 +3,7 @@ package br.com.paulosedassari.votacao.interfaces.web.error;
 import br.com.paulosedassari.votacao.domain.pauta.exception.PautaNaoEncontradaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.DuracaoSessaoInvalidaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoEncerradaException;
+import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoEmAndamentoException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoJaExistenteException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoNaoEncontradaException;
 import br.com.paulosedassari.votacao.domain.voto.exception.VotoDuplicadoException;
@@ -59,6 +60,19 @@ public class GlobalExceptionHandler {
         return resposta(
                 HttpStatus.CONFLICT,
                 "SESSAO_ENCERRADA",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(SessaoEmAndamentoException.class)
+    ResponseEntity<ErroResponse> tratarSessaoEmAndamento(
+            SessaoEmAndamentoException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.CONFLICT,
+                "SESSAO_EM_ANDAMENTO",
                 exception.getMessage(),
                 request
         );
