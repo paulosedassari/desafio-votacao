@@ -7,4 +7,6 @@ public interface VotoPersistencePort {
     boolean existePorPautaIdEAssociadoId(Long pautaId, String associadoId);
 
     Voto salvar(Voto voto);
+
+    ContagemVotos contabilizarPorPautaId(Long pautaId);
 }
