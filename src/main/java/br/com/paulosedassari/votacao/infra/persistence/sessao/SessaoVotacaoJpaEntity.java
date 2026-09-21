@@ -23,6 +23,9 @@ class SessaoVotacaoJpaEntity {
     @Column(name = "encerra_em", nullable = false)
     private Instant encerraEm;
 
+    protected SessaoVotacaoJpaEntity() {
+    }
+
     SessaoVotacaoJpaEntity(
             Long id,
             Long pautaId,
