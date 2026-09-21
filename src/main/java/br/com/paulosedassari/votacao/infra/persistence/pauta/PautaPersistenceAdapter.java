@@ -32,4 +32,9 @@ class PautaPersistenceAdapter implements PautaPersistencePort {
                 entidadeCriada.getCriadoEm()
         );
     }
+
+    @Override
+    public boolean existePorId(Long pautaId) {
+        return repository.existsById(pautaId);
+    }
 }
