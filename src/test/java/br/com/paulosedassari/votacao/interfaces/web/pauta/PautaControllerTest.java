@@ -6,10 +6,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import br.com.paulosedassari.votacao.domain.pauta.port.inbound.CadastrarPautaUseCase;
+import br.com.paulosedassari.votacao.domain.pauta.port.inbound.ListarPautasUseCase;
 import br.com.paulosedassari.votacao.domain.pauta.port.inbound.PautaCriada;
+import br.com.paulosedassari.votacao.domain.pauta.port.inbound.PautaListada;
 
 @WebMvcTest(PautaController.class)
 class PautaControllerTest {
@@ -29,6 +33,35 @@ class PautaControllerTest {
 
 	@MockitoBean
 	private CadastrarPautaUseCase cadastrarPautaUseCase;
+
+	@MockitoBean
+	private ListarPautasUseCase listarPautasUseCase;
+
+	@Test
+	void deveListarTodasAsPautas() throws Exception {
+		when(listarPautasUseCase.executar()).thenReturn(List.of(
+				new PautaListada(
+						1L,
+						"Orçamento 2027",
+						"Aprovação do orçamento",
+						Instant.parse("2026-09-19T13:45:21Z")
+				),
+				new PautaListada(
+						2L,
+						"Reforma da sede",
+						"Aprovação da reforma",
+						Instant.parse("2026-09-20T10:00:00Z")
+				)
+		));
+
+		mockMvc.perform(get("/api/v1/pautas"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2))
+				.andExpect(jsonPath("$[0].id").value(1))
+				.andExpect(jsonPath("$[0].titulo").value("Orçamento 2027"))
+				.andExpect(jsonPath("$[1].id").value(2))
+				.andExpect(jsonPath("$[1].titulo").value("Reforma da sede"));
+	}
 
 	@Test
 	void deveCriarPauta() throws Exception {

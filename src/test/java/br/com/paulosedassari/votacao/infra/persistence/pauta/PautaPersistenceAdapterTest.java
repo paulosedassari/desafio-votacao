@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class PautaPersistenceAdapterTest {
@@ -52,5 +53,24 @@ class PautaPersistenceAdapterTest {
 
         assertThat(adapter.existePorId(10L)).isTrue();
         verify(repository).existsById(10L);
+    }
+
+    @Test
+    void deveBuscarTodasAsPautasMapeandoEntidadesParaDominio() {
+        var primeira = new PautaJpaEntity(1L, "Orçamento 2027", "Aprovação", CRIADO_EM);
+        var segunda = new PautaJpaEntity(
+                2L,
+                "Reforma da sede",
+                "Aprovação da reforma",
+                CRIADO_EM.plusSeconds(60)
+        );
+        when(repository.findAll()).thenReturn(List.of(primeira, segunda));
+
+        var resultado = adapter.buscarTodas();
+
+        assertThat(resultado).containsExactly(
+                new Pauta(1L, primeira.getTitulo(), primeira.getDescricao(), primeira.getCriadoEm()),
+                new Pauta(2L, segunda.getTitulo(), segunda.getDescricao(), segunda.getCriadoEm())
+        );
     }
 }
