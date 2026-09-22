@@ -218,7 +218,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErroResponse> resposta(
             HttpStatus status,
             String codigo,
-            String messagem,
+            String mensagem,
             HttpServletRequest request,
             List<ViolacaoCampo> violacoes
     ) {
@@ -226,7 +226,7 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 status.value(),
                 codigo,
-                messagem,
+                mensagem,
                 request.getRequestURI(),
                 violacoes
         );
