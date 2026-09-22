@@ -12,9 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Tag(name = "Pautas", description = "Operações relacionadas às pautas de votação")
 @RequestMapping("/api/v1/pautas")
@@ -39,4 +42,15 @@ public interface PautaOpenApi {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<PautaResponse> criarPauta(
             @Valid @RequestBody PautaRequest pautaRequest);
+
+    @Operation(summary = "Listar pautas", description = "Retorna todas as pautas cadastradas")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Pautas consultadas com sucesso"),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Falha interna",
+                    content = @Content(schema = @Schema(implementation = ErroResponse.class)))
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<PautaResponse>> listarPautas();
 }
