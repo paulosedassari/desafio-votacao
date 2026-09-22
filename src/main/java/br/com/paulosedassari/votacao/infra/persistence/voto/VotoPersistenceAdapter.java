@@ -34,7 +34,7 @@ class VotoPersistenceAdapter implements VotoPersistencePort {
             );
 
             var entidadeSalva = repository.saveAndFlush(entidade);
-            log.info("Voto registrado. votoId={} pautaId={}", entidadeSalva.getId(), voto.pautaId());
+            log.debug("Voto registrado. votoId={} pautaId={}", entidadeSalva.getId(), voto.pautaId());
 
             return new Voto(
                     entidadeSalva.getId(),
