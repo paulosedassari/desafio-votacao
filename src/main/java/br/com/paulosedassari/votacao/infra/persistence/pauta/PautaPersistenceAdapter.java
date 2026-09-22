@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -36,5 +38,17 @@ class PautaPersistenceAdapter implements PautaPersistencePort {
     @Override
     public boolean existePorId(Long pautaId) {
         return repository.existsById(pautaId);
+    }
+
+    @Override
+    public List<Pauta> buscarTodas() {
+        return repository.findAll().stream()
+                .map(entidade -> new Pauta(
+                        entidade.getId(),
+                        entidade.getTitulo(),
+                        entidade.getDescricao(),
+                        entidade.getCriadoEm()
+                ))
+                .toList();
     }
 }
