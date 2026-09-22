@@ -1,5 +1,6 @@
 package br.com.paulosedassari.votacao.interfaces.web.error;
 
+import br.com.paulosedassari.votacao.domain.elegibilidade.exception.CpfInvalidoException;
 import br.com.paulosedassari.votacao.domain.pauta.exception.PautaNaoEncontradaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.DuracaoSessaoInvalidaException;
 import br.com.paulosedassari.votacao.domain.sessao.exception.SessaoEncerradaException;
@@ -25,6 +26,19 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(CpfInvalidoException.class)
+    ResponseEntity<ErroResponse> tratarCpfInvalido(
+            CpfInvalidoException exception,
+            HttpServletRequest request
+    ) {
+        return resposta(
+                HttpStatus.NOT_FOUND,
+                "CPF_INVALIDO",
+                exception.getMessage(),
+                request
+        );
+    }
 
     @ExceptionHandler(PautaNaoEncontradaException.class)
     ResponseEntity<ErroResponse> tratarPautaNaoEncontrada(
